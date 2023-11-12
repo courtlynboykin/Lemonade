@@ -5,11 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,13 +36,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LemonadeTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    LemonadeApp()
-                }
+                LemonadeApp()
             }
         }
     }
@@ -46,18 +44,33 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun LemonadeApp() {
-    MakeLemonade()
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        MakeLemonade()
+    }
+
 }
 
 @Composable
 fun MakeLemonade(modifier: Modifier = Modifier) {
-    var result by remember { mutableStateOf (1) }
-    var image = when (result) {
+    var result by remember { mutableStateOf(1) }
+    val image = when (result) {
         1 -> R.drawable.lemon_tree
         2 -> R.drawable.lemon_squeeze
         3 -> R.drawable.lemon_drink
-        else -> R.drawable.lemon_restart
+        4 -> R.drawable.lemon_restart
+        else -> R.drawable.lemon_tree
     }
+    val instructions = when (result) {
+        1 -> R.string.tree
+        2 -> R.string.tap
+        3 -> R.string.drink
+        4 -> R.string.restart
+        else -> R.string.tree
+    }
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,22 +78,20 @@ fun MakeLemonade(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .background(Color.LightGray)
     ) {
-        Box {
-            Button(onClick = { result++ } ) {
-                Image(
-                    painter = painterResource(image),
-                    contentDescription = stringResource(R.string.tree),
-                    modifier = modifier
-                        .background(Color.Yellow)
-                )
-            }
-        }
-            Text(
-                text = stringResource(R.string.tap)
-            )
-        }
-
+        Image(
+            painter = painterResource(image),
+            contentDescription = stringResource(R.string.tree),
+            modifier = modifier
+                .background(Color.Yellow)
+                .clickable {  }
+        )
+        Text(
+            text = stringResource(instructions)
+        )
     }
+
+}
+
 
 @Composable
 fun LemonSqueeze(modifier: Modifier = Modifier) {
