@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LemonadeTheme {
-                LemonadeApp()
+                    LemonadeApp()
             }
         }
     }
@@ -55,7 +54,7 @@ fun LemonadeApp() {
 
 @Composable
 fun MakeLemonade(modifier: Modifier = Modifier) {
-    var result by remember { mutableStateOf(1) }
+    var result by remember { mutableStateOf (1) }
     val image = when (result) {
         1 -> R.drawable.lemon_tree
         2 -> R.drawable.lemon_squeeze
@@ -70,7 +69,6 @@ fun MakeLemonade(modifier: Modifier = Modifier) {
         4 -> R.string.restart
         else -> R.string.tree
     }
-
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,19 +76,28 @@ fun MakeLemonade(modifier: Modifier = Modifier) {
             .fillMaxSize()
             .background(Color.LightGray)
     ) {
-        Image(
-            painter = painterResource(image),
-            contentDescription = stringResource(R.string.tree),
-            modifier = modifier
-                .background(Color.Yellow)
-                .clickable {  }
-        )
-        Text(
-            text = stringResource(instructions)
-        )
+        Box {
+            Button(
+                onClick = { result++ },
+                shape = RectangleShape,
+                colors = ButtonDefaults.buttonColors(Color.Yellow)
+            ) {
+                Image(
+                    painter = painterResource(image),
+                    contentDescription = stringResource(R.string.tree),
+                    modifier = modifier
+                        .background(Color.Yellow)
+                )
+            }
+        }
+            Text(
+                text = stringResource(instructions)
+            )
+        }
+
     }
 
-}
+
 
 
 @Composable
