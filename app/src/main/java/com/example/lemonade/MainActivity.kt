@@ -5,11 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,11 +24,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.lemonade.ui.theme.LemonadeTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,7 +54,45 @@ fun LemonadeApp() {
     ) {
         MakeLemonade()
     }
+}
 
+@Composable
+fun LemonTextAndImage(
+    image: Painter,
+    imageDescription: String,
+    onClick: () -> Unit,
+    instruction: String,
+    modifier: Modifier
+){
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        Image(
+            painter = image,
+            contentDescription = imageDescription,
+            modifier = modifier
+                .clip(shape = RoundedCornerShape(45.dp))
+                .background(Color(0xFFd2e8d4))
+                .border(
+                    width = 2.dp,
+                    color = Color(0xFF69CDD8),
+                    shape = RoundedCornerShape(45.dp)
+                )
+                .size(200.dp)
+
+                .clickable(onClick = onClick)
+        )
+        Text(
+            text = instruction,
+            fontSize = 18.sp,
+            modifier = modifier
+                .padding(top = 16.dp)
+        )
+    }
 }
 
 @Composable
@@ -59,88 +105,41 @@ fun MakeLemonade(modifier: Modifier = Modifier) {
                 .background(Color.Yellow)
                 .fillMaxWidth()
         )
+        val repeatSqueeze = (1..4).random()
         var result by remember { mutableStateOf(1) }
         when (result) {
             1 ->
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                LemonTextAndImage(
+                    image = painterResource(R.drawable.lemon_tree),
+                    imageDescription = stringResource(R.string.tree),
+                    onClick = { result++ },
+                    instruction = stringResource(R.string.tap),
                     modifier = modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFd2e8d4))
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.lemon_tree),
-                        contentDescription = stringResource(R.string.tree),
-                        modifier = modifier
-                            .background(Color.White)
-                            .clickable { result++ }
-                    )
-                    Text(
-                        text = stringResource(R.string.tap)
-                    )
-                }
-
+                )
             2 ->
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                repeat(repeatSqueeze) { LemonTextAndImage(
+                    image = painterResource(R.drawable.lemon_squeeze),
+                    imageDescription = stringResource(R.string.lemon),
+                    onClick = { result ++ },
+                    instruction = stringResource(R.string.squeeze),
                     modifier = modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFd2e8d4))
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.lemon_squeeze),
-                        contentDescription = stringResource(R.string.lemon),
-                        modifier = modifier
-                            .background(Color.White)
-                            .clickable { result++ }
-                    )
-                    Text(
-                        text = stringResource(R.string.squeeze)
-                    )
-                }
-
-            3 ->
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFd2e8d4))
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.lemon_drink),
-                        contentDescription = stringResource(R.string.glass),
-                        modifier = modifier
-                            .background(Color.White)
-                            .clickable { result++ }
-                    )
-                    Text(
-                        text = stringResource(R.string.drink)
-                    )
-                }
-
+                )}
+           3 ->
+               LemonTextAndImage(
+                   image = painterResource(R.drawable.lemon_drink),
+                   imageDescription = stringResource(R.string.glass),
+                   onClick = { result++ },
+                   instruction = stringResource(R.string.drink),
+                   modifier = modifier
+               )
             4 ->
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                LemonTextAndImage(
+                    image = painterResource(R.drawable.lemon_restart),
+                    imageDescription = stringResource(R.string.empty),
+                    onClick = { result = 1 },
+                    instruction = stringResource(R.string.restart),
                     modifier = modifier
-                        .fillMaxSize()
-                        .background(Color(0xFFd2e8d4))
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.lemon_restart),
-                        contentDescription = stringResource(R.string.empty),
-                        modifier = modifier
-                            .background(Color.White)
-                            .clickable { result = 1 }
-                    )
-                    Text(
-                        text = stringResource(R.string.restart)
-                    )
-                }
-
+                )
         }
 
     }
